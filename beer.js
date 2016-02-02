@@ -58,6 +58,8 @@ var requestify = require('requestify');
 var Brauhaus = require('brauhaus');
 require('brauhaus-beerxml');
 
+var http = require('http'); http.createServer(function (req, res) { res.writeHead(200, {'Content-Type': 'text/plain'}); res.send('it is running\n'); }).listen(process.env.PORT || 5000);
+
 if (!process.env.token) {
   console.log('Error: Specify token in environment');
   process.exit(1);

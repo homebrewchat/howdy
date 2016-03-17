@@ -12,6 +12,7 @@
     "mustache": "^2.1.3",
     "needle": "^0.11.0",
     "requestify": "^0.1.17",
+    "twitter": "^1.2.5",
     "ws": "^0.7.2"
   },
   "devDependencies": {},

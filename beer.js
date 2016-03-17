@@ -51,6 +51,8 @@ This bot demonstrates many of the core features of Botkit:
 
     -> http://howdy.ai/botkit
 
+token=xoxb-16780217876-9Km6L2qnrkvr4va8OrqhnvnT node bot.js
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 var express = require('express');
 var app     = express();
@@ -69,7 +71,27 @@ app.get('/', function(request, response) {
 var Botkit = require('./lib/Botkit.js');
 var requestify = require('requestify'); 
 var Brauhaus = require('brauhaus');
+var Twitter = require('twitter');
+
 require('brauhaus-beerxml');
+
+
+/*
+var client = new Twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+});
+*/
+
+var client = new Twitter({
+  consumer_key: 'j6H4cVhk69oCcmNudOCsBsT6q',
+  consumer_secret: 'EcbqNWDNf6vWWfnhqUZyuGTkFLFUnHAD5IJx1MUudVh24RDSor',
+  access_token_key: '20020466-ySDkutMXUCdc8By4cXPzniSIk2vKjGN2VwKBToCsx',
+  access_token_secret: 'pYnqEQ4T6gQrvXh7Yc2K8FmWBmoJCBSVCKLNp0eGGfrDz',
+});
+
 
 if (!process.env.token) {
   console.log('Error: Specify token in environment');
@@ -244,6 +266,10 @@ controller.on('file_share',function(bot,message) {
 	}
 });
 
+controller.on('reaction_added',function(bot,message) {
+	console.log(message);
+});
+
 controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,message) {
   var og = 0;
   var fg = 0;
@@ -332,4 +358,20 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 	}, function(err){
 		console.log(err);
 	});
+});
+
+controller.hears(['tweet (.*)'],'direct_message,direct_mention,mention',function(bot,message) {
+	console.log(message);
+	if(message.channel == 'G0GP0PS67') {
+		var matches = message.text.match(/tweet([\s\S]*)/m);
+		var tweet_text = matches[1];
+		client.post('statuses/update', {status: tweet_text},  function(error, tweet, response){
+		  if(error) throw error;
+		  var id = tweet.id_str;
+		  var user = tweet.user.screen_name;
+		  var url = 'https://twitter.com/' + user + '/status/' + id + '';
+		  bot.reply(message,'I did it! \n' + url);
+		});
+	}
+	
 });

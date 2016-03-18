@@ -51,7 +51,6 @@ This bot demonstrates many of the core features of Botkit:
 
     -> http://howdy.ai/botkit
 
-token=xoxb-16780217876-9Km6L2qnrkvr4va8OrqhnvnT node bot.js
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 var express = require('express');
@@ -87,7 +86,7 @@ var client = new Twitter({
 
 
 
-if (!process.env.token) {
+if (!env[node_env].token) {
   console.log('Error: Specify token in environment');
   process.exit(1);
 }
@@ -97,7 +96,7 @@ var controller = Botkit.slackbot({
 });
 
 controller.spawn({
-  token: process.env.token
+  token: env[node_env].token
 }).startRTM(function(err) {
   if (err) {
     throw new Error(err);

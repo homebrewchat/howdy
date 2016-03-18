@@ -72,25 +72,19 @@ var Botkit = require('./lib/Botkit.js');
 var requestify = require('requestify'); 
 var Brauhaus = require('brauhaus');
 var Twitter = require('twitter');
+var env = require('env.json');
 
 require('brauhaus-beerxml');
 
-
-/*
-var client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-});
-*/
+var node_env = 'development';
 
 var client = new Twitter({
-  consumer_key: 'j6H4cVhk69oCcmNudOCsBsT6q',
-  consumer_secret: 'EcbqNWDNf6vWWfnhqUZyuGTkFLFUnHAD5IJx1MUudVh24RDSor',
-  access_token_key: '20020466-ySDkutMXUCdc8By4cXPzniSIk2vKjGN2VwKBToCsx',
-  access_token_secret: 'pYnqEQ4T6gQrvXh7Yc2K8FmWBmoJCBSVCKLNp0eGGfrDz',
+  consumer_key: env[node_env].TWITTER_CONSUMER_KEY,
+  consumer_secret: env[node_env].TWITTER_CONSUMER_SECRET,
+  access_token_key: env[node_env].TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: env[node_env].TWITTER_ACCESS_TOKEN_SECRET,
 });
+
 
 
 if (!process.env.token) {

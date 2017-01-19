@@ -60,7 +60,6 @@ var Botkit = require('./lib/Botkit.js');
 var requestify = require('requestify');
 var Brauhaus = require('brauhaus');
 var Twitter = require('twitter');
-var env = require('env.json');
 var node_env = 'development';
 
 app.set('port', (process.env.PORT || 5000));
@@ -80,8 +79,8 @@ var client = new Twitter({
   access_token_secret: env[node_env].TWITTER_ACCESS_TOKEN_SECRET,
 });
 
-if (!env[node_env].token) {
-  console.log('Error: Specify token in environment');
+if (!process.env.SLACK_TOKEN) {
+  console.log('Error: Specify SLACK_TOKEN as environment variable');
   process.exit(1);
 }
 
@@ -90,7 +89,7 @@ var controller = Botkit.slackbot({
 });
 
 controller.spawn({
-  token: env[node_env].token
+  token: process.env.SLACK_TOKEN
 }).startRTM(function(err) {
   if (err) {
     throw new Error(err);

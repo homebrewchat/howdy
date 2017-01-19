@@ -53,8 +53,15 @@ This bot demonstrates many of the core features of Botkit:
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+require('brauhaus-beerxml');
 var express = require('express');
 var app     = express();
+var Botkit = require('./lib/Botkit.js');
+var requestify = require('requestify');
+var Brauhaus = require('brauhaus');
+var Twitter = require('twitter');
+var env = require('env.json');
+var node_env = 'development';
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -66,25 +73,12 @@ app.get('/', function(request, response) {
     console.log('App is running, server is listening on port ', app.get('port'));
 });
 
-
-var Botkit = require('./lib/Botkit.js');
-var requestify = require('requestify'); 
-var Brauhaus = require('brauhaus');
-var Twitter = require('twitter');
-var env = require('env.json');
-
-require('brauhaus-beerxml');
-
-var node_env = 'development';
-
 var client = new Twitter({
   consumer_key: env[node_env].TWITTER_CONSUMER_KEY,
   consumer_secret: env[node_env].TWITTER_CONSUMER_SECRET,
   access_token_key: env[node_env].TWITTER_ACCESS_TOKEN_KEY,
   access_token_secret: env[node_env].TWITTER_ACCESS_TOKEN_SECRET,
 });
-
-
 
 if (!env[node_env].token) {
   console.log('Error: Specify token in environment');
@@ -109,34 +103,28 @@ controller.hears(['hello'],'direct_message,direct_mention,mention',function(bot,
 })
 
 controller.hears(['attach'],'direct_message,direct_mention',function(bot,message) {
-
   var attachments = [];
   var attachment = {
     title: 'This is an attachment',
     color: '#FFCC99',
     fields: [],
   }
-
   attachment.fields.push({
     label: 'Field',
     value: 'A longish value',
     short: false,
   })
-
   attachment.fields.push({
     label: 'Field',
     value: 'Value',
     short: true,
   })
-
   attachment.fields.push({
     label: 'Field',
     value: 'Value',
     short: true,
   })
-
   attachments.push(attachment);
-
   bot.reply(message,{
     text: 'See below...',
     attachments: attachments,
@@ -149,24 +137,14 @@ controller.hears(['dm me'],'direct_message,direct_mention',function(bot,message)
   bot.startConversation(message,function(err,convo) {
     convo.say('Heard ya');
   });
-
   bot.startPrivateConversation(message,function(err,dm) {
     dm.say('Private reply!');
   })
-
 });
 
 controller.hears(['goodnight'], 'ambient', function(bot, message) {
 	bot.reply(message, "Don't forget to count the hops jumping into the boil kettle!");
 });
-
-function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-function rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
 
 controller.on('file_share',function(bot,message) {
 	var file_type = message.file.filetype;
@@ -190,7 +168,6 @@ controller.on('file_share',function(bot,message) {
 					"og": xmlRecipe.og,
 					"fg": xmlRecipe.fg,
 					"abv": xmlRecipe.abv
-					
 				}
 			}
 			var options = {
@@ -208,29 +185,25 @@ controller.on('file_share',function(bot,message) {
 				var color = Brauhaus.srmToRgb(xmlRecipe.color);
 				var hex = rgbToHex(color[0], color[1], color[2]);
 				var id = response.getBody().objectId;
-				var url = 'http://share.tatx.us/recipe/' + id; 
-				
-				  var attachments = [];
-				  var attachment = {
-				    title: xmlRecipe.name,
-				    text: xmlRecipe.style.name,
-				    title_link: url,
-				    color: hex,
-				    fields: [],
-				  }
-				  	
+				var url = 'http://share.tatx.us/recipe/' + id;
+			  var attachments = [];
+			  var attachment = {
+			    title: xmlRecipe.name,
+			    text: xmlRecipe.style.name,
+			    title_link: url,
+			    color: hex,
+			    fields: [],
+			  }
 				  attachment.fields.push({
 				    title: 'ABV',
 				    value: xmlRecipe.abv.toFixed(1) + ' %',
 				    short: true,
 				  })
-				
 				  attachment.fields.push({
 				    title: 'IBU',
 				    value: xmlRecipe.ibu.toFixed(1) + ' IBU',
 				    short: true,
 				  })
-				  
 				  attachment.fields.push({
 				    title: 'OG',
 				    value: xmlRecipe.og.toFixed(3),
@@ -240,21 +213,17 @@ controller.on('file_share',function(bot,message) {
 				    title: 'FG',
 				    value: xmlRecipe.fg.toFixed(3),
 				    short: true,
-				  })		  		
+				  })
 				  attachments.push(attachment);
 				  bot.reply(message,{
 				    text: 'See below...',
 				    attachments: attachments,
 				  },function(err,resp) {
 				    console.log(err,resp);
-				  });				
+				  });
 			}, function(err) {
 				console.log(err);
 			});
-			
-			
-			
-
 		});
 	}
 });
@@ -267,7 +236,6 @@ controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,me
   var og = 0;
   var fg = 0;
   bot.startConversation(message,function(err,convo) {
-
     convo.ask('Whats the OG?',function(response,convo) {
 		console.log(response.text);
 		og = response.text;
@@ -277,17 +245,11 @@ controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,me
 	   	var abv = (og - response.text)*131;
 	   	var calc = abv.toFixed(1) + '%';
 	   	convo.say('Cool, your estimated abv is ' + calc);
-	   	convo.next(); 
+	   	convo.next();
     });
-
-
   });
-
 });
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
+
 controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct_mention,mention',function(bot,message) {
 	var matches = message.text.match(/^.*?\bhop\b.*?\bsubstitute\b.*?for(.*)/m);
   	var match = matches[1];
@@ -310,9 +272,7 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 					var text = '';
 					var size = json.length;
 					json.forEach(function(item, key){
-
 						text += '• <' + url + item.id + '|' + toTitleCase(item.name) + '>'
-						
 						if(key + 1 != size) {
 							text += '\n';
 						}
@@ -326,28 +286,22 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 					    thumb_url: 'http://brewerwall.com/img/logo.png',
 					    fields: [],
 					  }
-					  	
 					  attachment.fields.push({
 					    value: text,
 					    short: false,
 					  })
-	  		
 					  attachments.push(attachment);
 					  bot.reply(message,{
 					    attachments: attachments,
 					  },function(err,resp) {
 					    console.log(err,resp);
-					  });	
-				
+					  });
 					convo.next();
 				}, function(err){
 					console.log(err);
 				});
-				
 			});
 		});
-
-		
 	}, function(err){
 		console.log(err);
 	});
@@ -366,5 +320,18 @@ controller.hears(['tweet (.*)'],'direct_message,direct_mention,mention',function
 		  bot.reply(message,'I did it! \n' + url);
 		});
 	}
-	
 });
+
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}

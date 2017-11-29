@@ -253,19 +253,19 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 	var matches = message.text.match(/^.*?\bhop\b.*?\bsubstitute\b.*?for(.*)/m);
   	var match = matches[1];
   	var name = match.replace(/\s+/g, '');
-	requestify.get('http://api.brewerwall.com/v1/hops?name=' + name, {"dataType": "json"}).then(function(response){
+	requestify.get('http://www.brewerwall.com/v1/hops?name=' + name, {"dataType": "json"}).then(function(response){
 		var results = response.getBody();
 		var json = JSON.parse(results);
 		var id = json[0].id;
 		var text = '';
-		var url = 'http://brewerwall.com/hops/';
+		var url = 'http://www.brewerwall.com/hops/';
 		json.forEach(function(item, key){
 			text += key + 1 + ') ' + toTitleCase(item.name) + ' (' + item.origin + ') \n';
 		});
 		bot.startConversation(message,function(err,convo) {
 			convo.ask('Looks like there are ' + json.length + ' which one? \n' + text,function(response,convo) {
 				var id = json[response.text - 1].id;
-				requestify.get('http://api.brewerwall.com/v1/hops/' + id + '/substitutes').then(function(response){
+				requestify.get('http://www.brewerwall.com/v1/hops/' + id + '/substitutes').then(function(response){
 					var results = response.getBody();
 					var json = JSON.parse(results);
 					var text = '';
@@ -282,7 +282,7 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 					  var attachments = [];
 					  var attachment = {
 					    title: 'Hop Substitions For ' + toTitleCase(name),
-					    thumb_url: 'http://brewerwall.com/img/logo.png',
+					    thumb_url: 'http://www.brewerwall.com/img/logo.png',
 					    fields: [],
 					  }
 					  attachment.fields.push({

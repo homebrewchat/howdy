@@ -265,6 +265,7 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 		bot.startConversation(message,function(err,convo) {
 			convo.ask('Looks like there are ' + json.length + ' which one? \n' + text,function(response,convo) {
 				var id = json[response.text - 1].id;
+				var selectedHop = json[response.text - 1].name;
 				requestify.get('http://www.brewerwall.com/api/v1/hops/' + id + '/substitutes').then(function(response){
 					var results = response.getBody();
 					var json = JSON.parse(results);
@@ -281,7 +282,7 @@ controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct
 					}
 					  var attachments = [];
 					  var attachment = {
-					    title: 'Hop Substitions For ' + toTitleCase(name),
+					    title: 'Hop Substitions For ' + toTitleCase(selectedHop),
 					    thumb_url: 'http://www.brewerwall.com/img/logo.png',
 					    fields: [],
 					  }

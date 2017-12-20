@@ -100,6 +100,21 @@ controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function
   });
 })
 
+controller.hears(['roll ([0-9]*)d([0-9]*)'], 'direct_message,direct_mention', function(bot, message) {
+  var matches = message.text.match(/roll ([0-9]*)d([0-9]*)/i);
+  var diceCount = matches[1];
+  var diceSize = matches[2];
+
+  var total = 0;
+  var rolls = [];
+  for (var i = 0; i < diceCount; i++) {
+    var roll = Math.floor(Math.random() * diceSize + 1);
+    rolls[i] = roll;
+    total += roll;
+  }
+  bot.reply(message, 'You rolled: ' + rolls + '\nTotal: ' + total);
+});
+
 controller.hears(['call me (.*)'],'direct_message,direct_mention,mention',function(bot,message) {
   var matches = message.text.match(/call me (.*)/i);
   var name = matches[1];

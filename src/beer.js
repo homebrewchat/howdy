@@ -227,10 +227,6 @@ controller.on('file_share',function(bot,message) {
 	}
 });
 
-controller.on('reaction_added',function(bot,message) {
-	console.log(message);
-});
-
 controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,message) {
   var og = 0;
   var fg = 0;

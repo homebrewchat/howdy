@@ -205,10 +205,10 @@ controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,me
   });
 });
 
-controller.hears(['What hop can you substitute for (.*)'],'direct_message,direct_mention,mention,ambient',function(bot,message) {
-	var matches = message.text.match(/^.*?\bhop\b.*?\bsubstitute\b.*?for(.*)/m);
-  	var match = matches[1];
-  	var name = match.replace(/\s+/g, '');
+controller.hears(['[wW]hat hop can you sub(stitute)? for (.*)'],'direct_message,direct_mention,mention,ambient',function(bot,message) {
+	var matches = message.text.match(/^.*?\bhop\b.*?\bsub(stitute)?\b.*?for(.*)/m);
+  var match = matches[2];
+  var name = match.replace(/\s+/g, '');
 	requestify.get('http://www.brewerwall.com/api/v1/hops?name=' + name, {"dataType": "json"}).then(function(response){
 		var results = response.getBody();
 		var json = JSON.parse(results);

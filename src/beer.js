@@ -62,7 +62,7 @@ var Brauhaus = require('brauhaus');
 var Twitter = require('twitter');
 var node_env = 'development';
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 3000));
 
 //For avoidong Heroku $PORT error
 app.get('/', function(request, response) {

@@ -16,3 +16,7 @@ environment:
 ```
 
 Start the container with `docker-compose up --build`
+
+## Deployments
+
+To deploy, simply merge your changes and push. You should see a notification in the #bot_stuff channel.

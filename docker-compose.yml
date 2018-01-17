@@ -2,6 +2,7 @@ version: '2'
 services:
   node:
     build:
+      context: .
       dockerfile: Dockerfile
     command: yarn run start  # tyler's key, maybe replace with your own?
     ports:

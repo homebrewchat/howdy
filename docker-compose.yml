@@ -4,7 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: yarn run start  # tyler's key, maybe replace with your own?
+    command: yarn run dev
+    volumes:
+      - .:/app:delegated
     ports:
       - 3000:3000
     labels:

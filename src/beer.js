@@ -101,46 +101,6 @@ controller.hears(['hello'],'direct_message,direct_mention,mention',function(bot,
     bot.reply(message,"Hello.");
 })
 
-controller.hears(['attach'],'direct_message,direct_mention',function(bot,message) {
-  var attachments = [];
-  var attachment = {
-    title: 'This is an attachment',
-    color: '#FFCC99',
-    fields: [],
-  }
-  attachment.fields.push({
-    label: 'Field',
-    value: 'A longish value',
-    short: false,
-  })
-  attachment.fields.push({
-    label: 'Field',
-    value: 'Value',
-    short: true,
-  })
-  attachment.fields.push({
-    label: 'Field',
-    value: 'Value',
-    short: true,
-  })
-  attachments.push(attachment);
-  bot.reply(message,{
-    text: 'See below...',
-    attachments: attachments,
-  },function(err,resp) {
-    console.log(err,resp);
-  });
-});
-
-controller.hears(['dm me'],'direct_message,direct_mention',function(bot,message) {
-  bot.startConversation(message,function(err,convo) {
-    convo.say('Heard ya');
-  });
-  bot.startPrivateConversation(message,function(err,dm) {
-    dm.say('Private reply!');
-  })
-});
-
 controller.hears(['goodnight'], 'ambient', function(bot, message) {
 	bot.reply(message, "Don't forget to count the hops jumping into the boil kettle!");
 });

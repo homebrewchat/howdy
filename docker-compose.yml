@@ -1,0 +1,10 @@
+version: '2'
+services:
+  node:
+    build:
+      dockerfile: Dockerfile
+    command: yarn run start  # tyler's key, maybe replace with your own?
+    ports:
+      - 3000:3000
+    labels:
+      lagoon.type: node

@@ -9,3 +9,9 @@ services:
       - 3000:3000
     labels:
       lagoon.type: node
+    networks:
+      - amazeeio-network
+      - default
+networks:
+  amazeeio-network:
+    external: true

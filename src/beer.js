@@ -47,6 +47,16 @@ controller.spawn({
   }
 });
 
+controller.on('create_bot', function() {
+  controller.say(
+    {
+      text: 'I\'m back baby!',
+      channel: 'C8TTK8Y58' // #bot_stuff
+    }
+  );
+});
+
+
 controller.hears(['help'],'direct_message,direct_mention,mention',function(bot,message) {
     bot.reply(message,"hello\ngoodnight\nWhat hops can I substitute for <hop>\nabv");
 })

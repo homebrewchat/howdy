@@ -150,7 +150,7 @@ controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,me
   });
 });
 
-controller.hears(['[wW]hat hop can you sub(stitute)? for (.*)'],'direct_message,direct_mention,mention,ambient',function(bot,message) {
+controller.hears(['[wW]hat hops? can you sub(stitute)? for (.*)'],'direct_message,direct_mention,mention,ambient',function(bot,message) {
 	var matches = message.text.match(/^.*?\bhop\b.*?\bsub(stitute)?\b.*?for(.*)/m);
   var match = matches[2];
   var name = match.replace(/\s+/g, '');

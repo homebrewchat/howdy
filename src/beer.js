@@ -29,8 +29,14 @@ if (!process.env.SLACK_TOKEN) {
   process.exit(1);
 }
 
+if (process.env.BOTKIT_DEBUG) {
+  debug_enable = true;
+} else {
+  debug_enable = false;
+}
+
 var controller = Botkit.slackbot({
- debug: false,
+ debug: debug_enable,
 });
 
 controller.spawn({

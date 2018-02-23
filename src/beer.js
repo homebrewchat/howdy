@@ -41,6 +41,9 @@ controller.spawn({
   }
 });
 
+controller.hears(['help'],'direct_message,direct_mention,mention',function(bot,message) {
+    bot.reply(message,"hello\ngoodnight\nWhat hops can I substitute for <hop>\nabv");
+})
 
 controller.hears(['hello'],'direct_message,direct_mention,mention',function(bot,message) {
     bot.reply(message,"Hello.");

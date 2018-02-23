@@ -78,7 +78,7 @@ controller.hears(['abv'],'direct_message,direct_mention,mention',function(bot,me
 });
 
 controller.hears(['[wW]hat hops? can (you|I) sub(stitute)? for (.*)'],'direct_message,direct_mention,mention,ambient',function(bot,message) {
-	var matches = message.text.match(/^.*?\bhops?\b.*?\bsub(stitute)?\b.*?for(.*)/m);
+	var matches = message.text.match(/^.*?\bhops?\b.*?\bsub(stitute)?\b.*?for([ \w]*)\??$/m);
   var match = matches[2];
   var name = match.replace(/\s+/g, '');
 	requestify.get('http://www.brewerwall.com/api/v1/hops?name=' + name, {"dataType": "json"}).then(function(response){

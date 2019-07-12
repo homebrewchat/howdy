@@ -1,0 +1,2 @@
+slackeventsapi
+slackclient

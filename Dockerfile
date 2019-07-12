@@ -1,8 +1,5 @@
-FROM amazeeio/node:8
+FROM python:3.7-stretch
 
-COPY package.json /app/
-COPY yarn.lock /app/
-COPY src/ /app/
-RUN yarn install --pure-lockfile
-
-CMD yarn run start
+COPY . /app
+RUN pip install -r /app/requirements.txt
+CMD python /app/app.py

@@ -1,14 +1,25 @@
 import os
 
+from flask import Flask
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
 
 from hbcbot import commands
 
 
+app = Flask(__name__)
+
+
+@app.route('/healthcheck')
+def healthcheck():
+    return 'ok'
+
+
 # event handler / server
 slack_signing_secret = os.environ["SLACK_SIGNING_SECRET"]
-slack_events_adapter = SlackEventAdapter(slack_signing_secret, "/slack/events")
+slack_events_adapter = SlackEventAdapter(slack_signing_secret,
+                                         endpoint="/slack/events",
+                                         server=app)
 
 # web API for sending messages
 slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
@@ -48,6 +59,3 @@ def handle_message(event_data):
 @slack_events_adapter.on("error")
 def error_handler(err):
     print("ERROR: " + str(err))
-
-# wsgi callable
-application = slack_events_adapter.server

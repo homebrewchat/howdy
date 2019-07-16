@@ -28,8 +28,14 @@ slack_events_adapter = SlackEventAdapter(slack_signing_secret,
 slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
 slack_client = WebClient(token=slack_bot_token)
 
+
+def print_help(args):
+    return('commands: .abv')
+
+
 command_map = {
     'abv': commands.calc_abv,
+    'help': print_help,
 }
 
 

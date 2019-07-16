@@ -7,6 +7,6 @@ def calc_abv(args):
     try:
         abv = (float(og) - float(fg)) * 131
         return 'ABV is %.1f' % abv
-    except TypeError:
+    except Exception:
         # not passed numbers
         return usage

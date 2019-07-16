@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask import Flask
 from slack import WebClient
@@ -8,6 +9,8 @@ from hbcbot import commands
 
 
 app = Flask(__name__)
+
+brewfather_share_re = re.compile(r'https://share.brewfather.app/(\w+)')
 
 
 @app.route('/healthcheck')
@@ -52,6 +55,13 @@ def handle_message(event_data):
         if not cmd:
             return
         response = cmd(args)
+        slack_client.chat_postMessage(channel=channel, text=response)
+
+    elif 'share.brewfather.app' in msg_text:
+        bfid = brewfather_share_re.findall(msg_text)
+        # TODO(jroll) deal with multiple URLs
+        new_url = 'https://web.brewfather.app/#/share/%s' % bfid[0]
+        response = 'for people on work internets: %s' % new_url
         slack_client.chat_postMessage(channel=channel, text=response)
 
 

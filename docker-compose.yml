@@ -1,0 +1,20 @@
+version: '2.3'
+
+x-lagoon-project:
+  # Lagoon project name (leave `&lagoon-project` when you edit this)
+  &lagoon-project tylerward-brubot
+
+x-environment:
+  &default-environment
+    LAGOON_PROJECT: *lagoon-project
+
+services:
+  app: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
+    build:
+      context: .
+      dockerfile: Dockerfile
+    labels:
+      # Lagoon Labels
+      lagoon.type: python-ckandatapusher
+    ports:
+      - 8800

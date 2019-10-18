@@ -76,6 +76,14 @@ def handle_message(event_data):
         response = 'for people on work internets: %s' % new_url
         slack_client.chat_postMessage(channel=channel, text=response)
 
+@slack_events_adapter.on("member_joined_channel")
+def handle_join(event_data):
+    message = event_data["event"]
+    # if "C0FKR5YDT" in message["channel"]: # this is the ID for #general
+    if "C8TTK8Y58" in message["channel"]: # this is the ID for #bot_stuff
+        response = 'HBC welcome %s !' % message["user"]
+        slack_client.chat_postMessage(channel=message["channel"], test=response)
+
 
 # Error events
 @slack_events_adapter.on("error")

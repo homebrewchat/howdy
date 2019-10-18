@@ -28,6 +28,11 @@ slack_events_adapter = SlackEventAdapter(slack_signing_secret,
 slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
 slack_client = WebClient(token=slack_bot_token)
 
+if os.environ["SLACKBOT_DEBUG"] is not None:
+    debug = True
+else:
+    debug: False
+
 
 def print_help(args):
     return('commands: .abv')
@@ -43,7 +48,8 @@ command_map = {
 @slack_events_adapter.on("message")
 def handle_message(event_data):
     message = event_data["event"]
-    print('event hit: %s' % event_data)
+    if debug:
+        print('event hit: %s' % event_data)
     # If the incoming message contains "hi", then respond with a "Hello" message
     if message.get('subtype') is not None:
         # nfi what this means, but it's in the example. probably threads

@@ -84,7 +84,7 @@ def handle_join(event_data):
     # if channel == "C0FKR5YDT": # this is the ID for #general
     if channel == "C8TTK8Y58": # this is the ID for #bot_stuff
         response = 'HBC welcome <@%s> !' % message["user"]
-        slack_client.chat_postMessage(channel=channel, test=response)
+        slack_client.chat_postMessage(channel=channel, text=response)
 
 
 # Error events

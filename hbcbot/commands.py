@@ -27,9 +27,9 @@ def brix_sg(args):
             return usage
 
     if len(args) == 2:
-        obrix = float(args[0])
-        fbrix = float(args[1])
         try:
+            obrix = float(args[0])
+            fbrix = float(args[1])
             sg = (obrix / (258.6 - ((obrix / 258.2) * 227.1))) + 1
             fg = (1 -
                   (0.004493 * obrix) + (0.011774 * fbrix) +

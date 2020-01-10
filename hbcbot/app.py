@@ -31,7 +31,7 @@ slack_client = WebClient(token=slack_bot_token)
 if os.environ["SLACKBOT_DEBUG"] is not None:
     debug = True
 else:
-    debug: False
+    debug = False
 
 
 def print_help(args):
@@ -51,7 +51,6 @@ def handle_message(event_data):
     message = event_data["event"]
     if debug:
         print('event hit: %s' % event_data)
-    # If the incoming message contains "hi", then respond with a "Hello" message
     if message.get('subtype') is not None:
         # nfi what this means, but it's in the example. probably threads
         return
@@ -77,13 +76,14 @@ def handle_message(event_data):
         response = 'for people on work internets: %s' % new_url
         slack_client.chat_postMessage(channel=channel, text=response)
 
+
 @slack_events_adapter.on("member_joined_channel")
 def handle_join(event_data):
     message = event_data["event"]
     channel = message["channel"]
 
-    # if channel == "C0FKR5YDT": # this is the ID for #general
-    if channel == "C8TTK8Y58": # this is the ID for #bot_stuff
+    # if channel == "C0FKR5YDT":  # this is the ID for #general
+    if channel == "C8TTK8Y58":  # this is the ID for #bot_stuff
         response = 'HBC welcome <@%s> !' % message["user"]
         slack_client.chat_postMessage(channel=channel, text=response)
 

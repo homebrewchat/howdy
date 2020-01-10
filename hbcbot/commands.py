@@ -14,7 +14,7 @@ def calc_abv(args):
 
 def brix_sg(args):
     usage = 'Usage: .brix <Original BRIX> (<Final BRIX>)'
-    if len(args) < 1 and len(args) > 2:
+    if len(args) < 1 or len(args) > 2:
         return usage
     if len(args) == 1:
         brix = float(args[0])

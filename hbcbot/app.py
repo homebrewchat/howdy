@@ -63,7 +63,7 @@ def handle_message(event_data):
     if msg_text.startswith('.'):
         # we have a bot command
         cmd, *args = msg_text.lstrip('.').split()
-        cmd = command_map.get(cmd)
+        cmd = command_map.get(cmd.lower())
         if not cmd:
             return
         response = cmd(args)

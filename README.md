@@ -1,16 +1,16 @@
-to run:
+## Running tests
 
 ```
-export SLACK_SIGNING_SECRET=xxx
-export SLACK_BOT_TOKEN=yyy
-docker build .
-# VIRTUAL_HOST and LETSENCRYPT_HOST are for docker-gen/nginx things
-docker run \
-    --publish 3000:3000 \
-    --expose 3000 \
-    --name hbcbot \
-    --env "VIRTUAL_HOST=hbc.jroll.io" \
-    --env "LETSENCRYPT_HOST=hbc.jroll.io" \
-    --env "SLACK_SIGNING_SECRET=$SLACK_SIGNING_SECRET" \
-    --env "SLACK_BOT_TOKEN=$SLACK_BOT_TOKEN" \
-    $image_id
+pip install tox
+tox
+```
+
+## Running the app
+
+Let lagoon deploy it? For local work, I think something like:
+
+```
+export SLACK_SIGNING_SECRET=foo
+export SLACK_BOT_TOKEN=bar
+docker-compose up
+```

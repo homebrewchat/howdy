@@ -32,12 +32,13 @@ else:
 
 
 def print_help(args):
-    return('commands: .abv .brix')
+    return('commands: .abv .brix .hydrometer')
 
 
 command_map = {
     'abv': commands.calc_abv,
     'brix': commands.brix_sg,
+    'hydrometer': commands.hydro_adj,
     'help': print_help,
 }
 

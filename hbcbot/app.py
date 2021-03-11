@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from slack import WebClient
+from slack_sdk import WebClient
 from slackeventsapi import SlackEventAdapter
 
 from hbcbot import commands

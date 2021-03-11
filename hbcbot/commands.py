@@ -5,10 +5,16 @@ def _abv(og, fg):
 def _brix_to_og(brix):
     return (brix / (258.6 - ((brix / 258.2) * 227.1))) + 1
 
+
 def _hydro_temp_adj(mg, mtemp, ctemp):
-    ag = mg * ((1.00130346 - 0.000134722124 * mtemp + 0.00000204052596 * mtemp**2 - 0.00000000232820948 * mtemp**3) /
-               (1.00130346 - 0.000134722124 * ctemp + 0.00000204052596 * ctemp**2 - 0.00000000232820948 * ctemp**3))
+    ag = mg * ((1.00130346 - 0.000134722124 * mtemp +
+                0.00000204052596 * mtemp**2 -
+                0.00000000232820948 * mtemp**3) /
+               (1.00130346 - 0.000134722124 * ctemp +
+                0.00000204052596 * ctemp**2 -
+                0.00000000232820948 * ctemp**3))
     return ag
+
 
 def calc_abv(args):
     usage = 'Usage: .abv <OG> <FG>'
@@ -57,8 +63,10 @@ def brix_sg(args):
             # not passed numbers
             return usage
 
+
 def hydro_adj(args):
-    usage = 'Usage: .hydrometer <Measured Gravity> <Measured Temp> <Calibrated Temp>'
+    usage = ('Usage: .hydrometer <Measured Gravity> <Measured Temp>'
+             '<Calibrated Temp>')
     if len(args) != 3:
         return usage
 
@@ -71,4 +79,3 @@ def hydro_adj(args):
     except Exception:
         # not passed numbers
         return usage
-    

@@ -75,7 +75,8 @@ def handle_join(event_data):
 
     # if channel == "C0FKR5YDT":  # this is the ID for #general
     if channel == "C8TTK8Y58":  # this is the ID for #bot_stuff
-        response = 'HBC welcome <@%s> !/nhttps://i.imgur.com/mHznIY8.png' % message["user"]
+        response = """ HBC welcome <@%s>
+                       https://i.imgur.com/mHznIY8.png """ % message["user"]
         slack_client.chat_postMessage(channel=channel, text=response)
 
 

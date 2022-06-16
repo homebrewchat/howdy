@@ -67,6 +67,9 @@ def handle_message(event_data):
         response = cmd(args)
         slack_client.chat_postMessage(channel=channel, text=response)
 
+    if "69" in msg_text:
+        slack_client.reactions_add(channel=channel, name="nice", timestamp=message["ts"])
+
 
 @slack_events_adapter.on("member_joined_channel")
 def handle_join(event_data):

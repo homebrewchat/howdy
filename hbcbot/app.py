@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask import Flask
 from slack_sdk import WebClient
@@ -42,6 +43,7 @@ command_map = {
     'help': print_help,
 }
 
+sixtynine_pattern = re.compile('\b69+?\b')
 
 # handler for all messages
 @slack_events_adapter.on("message")
@@ -67,7 +69,7 @@ def handle_message(event_data):
         response = cmd(args)
         slack_client.chat_postMessage(channel=channel, text=response)
 
-    if "69" in msg_text:
+    if sixtynine_pattern.match(msg_text):
         slack_client.reactions_add(channel=channel, name="nice", timestamp=message["ts"])
 
 

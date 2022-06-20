@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask import Flask
 from slack_sdk import WebClient
@@ -42,6 +43,8 @@ command_map = {
     'help': print_help,
 }
 
+sixtynine_pattern = re.compile('\b69+?\b')
+
 
 # handler for all messages
 @slack_events_adapter.on("message")
@@ -67,8 +70,12 @@ def handle_message(event_data):
         response = cmd(args)
         slack_client.chat_postMessage(channel=channel, text=response)
 
-    if "69" in msg_text:
-        slack_client.reactions_add(channel=channel, name="nice", timestamp=message["ts"])
+    if sixtynine_pattern.match(msg_text):
+        slack_client.reactions_add(
+            channel=channel,
+            name="nice",
+            timestamp=message["ts"]
+            )
 
 
 @slack_events_adapter.on("member_joined_channel")
@@ -77,10 +84,14 @@ def handle_join(event_data):
     channel = message["channel"]
 
     if channel == "C0FKR5YDT":  # this is the ID for #general
-    # if channel == "C8TTK8Y58":  # this is the ID for #bot_stuff
+        # if channel == "C8TTK8Y58":  # this is the ID for #bot_stuff
         response = """HBC welcome <@%s>
 https://i.imgur.com/mHznIY8.png""" % message["user"]
-        slack_client.chat_postMessage(channel=channel, text=response, unfurl_links=True)
+        slack_client.chat_postMessage(
+            channel=channel,
+            text=response,
+            unfurl_links=True
+            )
 
 
 # Error events

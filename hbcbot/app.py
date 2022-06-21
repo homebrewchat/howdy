@@ -69,7 +69,7 @@ def handle_message(event_data):
         response = cmd(args)
         slack_client.chat_postMessage(channel=channel, text=response)
 
-    if sixtynine_pattern.match(msg_text):
+    if sixtynine_pattern.search(msg_text):
         slack_client.reactions_add(
             channel=channel,
             name="nice",

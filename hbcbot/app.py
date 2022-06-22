@@ -63,12 +63,16 @@ def handle_message(event_data):
         # we have a bot command
         cmd, *args = msg_text.lstrip('.').split()
         cmd = command_map.get(cmd.lower())
+        if debug:
+            print('command hit: %s', cmd)
         if not cmd:
             return
         response = cmd(args)
         slack_client.chat_postMessage(channel=channel, text=response)
 
     if re.search("\b69\b", msg_text):
+        if debug:
+            print('69 hit: %s', msg_text)
         slack_client.reactions_add(
             channel=channel,
             name="nice",

@@ -43,8 +43,6 @@ command_map = {
     'help': print_help,
 }
 
-sixtynine_pattern = re.compile('\b69+?\b')
-
 
 # handler for all messages
 @slack_events_adapter.on("message")
@@ -70,7 +68,7 @@ def handle_message(event_data):
         response = cmd(args)
         slack_client.chat_postMessage(channel=channel, text=response)
 
-    if sixtynine_pattern.findall(msg_text):
+    if re.search("\b69\b", msg_text):
         slack_client.reactions_add(
             channel=channel,
             name="nice",

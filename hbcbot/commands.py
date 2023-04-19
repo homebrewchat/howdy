@@ -110,7 +110,10 @@ def untappd(args):
 
     api_url = f"https://api.untappd.com/v4/search/beer?q={args}&client_id={untappd_client_id}&client_secret={untappd_client_secret}"
 
-    response = requests.get(api_url)
+    try:
+        response = requests.get(api_url)
+    except:
+        return "Unable to issue API query for Untappd"
 
     if response.status_code == 200:
         data = response.json()

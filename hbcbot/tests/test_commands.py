@@ -78,3 +78,15 @@ class TestUntappd(unittest.TestCase):
         with patch("hbcbot.commands.requests.get") as mock_get:
             commands.untappd(args)
             mock_get.assert_called_with(expected_api_url)
+    
+    @patch.dict(
+        "os.environ",
+        {
+            "UNTAPPD_CLIENT_ID": "mock_client_id",
+            "UNTAPPD_CLIENT_SECRET": "mock_client_secret",
+        },
+    )
+    def test_no_args(self):
+        expected = "Usage: .untappd <beer name>"
+        result = untappd(None)
+        self.assertEqual(result, expected)

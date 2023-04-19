@@ -78,7 +78,7 @@ class TestUntappd(unittest.TestCase):
         with patch("hbcbot.commands.requests.get") as mock_get:
             commands.untappd(args)
             mock_get.assert_called_with(expected_api_url)
-    
+
     @patch.dict(
         "os.environ",
         {

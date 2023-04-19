@@ -112,8 +112,8 @@ def untappd(args):
 
     try:
         response = requests.get(api_url)
-    except:
-        return "Unable to issue API query for Untappd"
+    except requests.exceptions.RequestException as e:
+        return f"Unable to issue API query for Untappd, {e}"
 
     if response.status_code == 200:
         data = response.json()

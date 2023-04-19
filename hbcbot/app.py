@@ -33,7 +33,7 @@ else:
 
 
 def print_help(args):
-    return "commands: .abv .brix .hydrometer"
+    return "commands: .abv .brix .hydrometer .untappd"
 
 
 command_map = {

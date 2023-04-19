@@ -102,6 +102,8 @@ def hydro_adj(args):
 
 def untappd(args):
     usage = "Usage: .untappd <beer name>"
+    if len(args) < 1:
+        return usage
 
     untappd_client_id = os.environ["UNTAPPD_CLIENT_ID"]
     untappd_client_secret = os.environ["UNTAPPD_CLIENT_SECRET"]

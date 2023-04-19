@@ -102,13 +102,21 @@ def hydro_adj(args):
 
 def untappd(args):
     usage = "Usage: .untappd <beer name>"
+    if not args:
+        return usage
 
-    untappd_client_id = os.environ["UNTAPPD_CLIENT_ID"]
-    untappd_client_secret = os.environ["UNTAPPD_CLIENT_SECRET"]
+    try:
+        untappd_client_id = os.environ["UNTAPPD_CLIENT_ID"]
+        untappd_client_secret = os.environ["UNTAPPD_CLIENT_SECRET"]
+    except KeyError:
+        return "Tyler, please add the Untappd API keys"
 
     api_url = f"https://api.untappd.com/v4/search/beer?q={args}&client_id={untappd_client_id}&client_secret={untappd_client_secret}"
 
-    response = requests.get(api_url)
+    try:
+        response = requests.get(api_url)
+    except requests.exceptions.RequestException as e:
+        return f"Unable to issue API query for Untappd, {e}"
 
     if response.status_code == 200:
         data = response.json()

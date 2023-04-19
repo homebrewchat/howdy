@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from hbcbot import commands
 
@@ -22,3 +23,58 @@ class TestHydrometer(unittest.TestCase):
         ag = commands._hydro_temp_adj(1.131, 90, 60)
         ag = round(ag, 3)
         self.assertEqual(ag, 1.135)
+
+
+class TestUntappd(unittest.TestCase):
+    @patch("hbcbot.commands.requests.get")
+    @patch.dict(
+        "os.environ",
+        {
+            "UNTAPPD_CLIENT_ID": "mock_client_id",
+            "UNTAPPD_CLIENT_SECRET": "mock_client_secret",
+        },
+    )
+    def test_untappd_with_valid_input(self, mock_get):
+        # Mock the response from the API
+        expected_data = {"response": {"beers": {"items": [{"beer": {"bid": "12345"}}]}}}
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = expected_data
+
+        # Test the function with valid input
+        args = "Heineken"
+        expected_output = "https://untappd.com/beer/12345"
+        self.assertEqual(commands.untappd(args), expected_output)
+
+    @patch("hbcbot.commands.requests.get")
+    @patch.dict(
+        "os.environ",
+        {
+            "UNTAPPD_CLIENT_ID": "mock_client_id",
+            "UNTAPPD_CLIENT_SECRET": "mock_client_secret",
+        },
+    )
+    def test_untappd_with_invalid_input(self, mock_get):
+        # Mock the response from the API
+        expected_data = {}
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = expected_data
+
+        # Test the function with invalid input
+        args = "Invalid Beer Name"
+        expected_output = "Type in beer name accurately"
+        self.assertEqual(commands.untappd(args), expected_output)
+
+    @patch.dict(
+        "os.environ",
+        {
+            "UNTAPPD_CLIENT_ID": "mock_client_id",
+            "UNTAPPD_CLIENT_SECRET": "mock_client_secret",
+        },
+    )
+    def test_untappd_api_call(self):
+        # Test the API call made by the function
+        args = "Heineken"
+        expected_api_url = "https://api.untappd.com/v4/search/beer?q=Heineken&client_id=mock_client_id&client_secret=mock_client_secret"
+        with patch("hbcbot.commands.requests.get") as mock_get:
+            commands.untappd(args)
+            mock_get.assert_called_with(expected_api_url)

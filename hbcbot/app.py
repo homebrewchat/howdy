@@ -11,16 +11,16 @@ from hbcbot import commands
 app = Flask(__name__)
 
 
-@app.route('/healthcheck')
+@app.route("/healthcheck")
 def healthcheck():
-    return 'ok'
+    return "ok"
 
 
 # event handler / server
 slack_signing_secret = os.environ["SLACK_SIGNING_SECRET"]
-slack_events_adapter = SlackEventAdapter(slack_signing_secret,
-                                         endpoint="/slack/events",
-                                         server=app)
+slack_events_adapter = SlackEventAdapter(
+    slack_signing_secret, endpoint="/slack/events", server=app
+)
 
 # web API for sending messages
 slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
@@ -33,14 +33,15 @@ else:
 
 
 def print_help(args):
-    return('commands: .abv .brix .hydrometer')
+    return "commands: .abv .brix .hydrometer"
 
 
 command_map = {
-    'abv': commands.calc_abv,
-    'brix': commands.brix_sg,
-    'hydrometer': commands.hydro_adj,
-    'help': print_help,
+    "abv": commands.calc_abv,
+    "brix": commands.brix_sg,
+    "hydrometer": commands.hydro_adj,
+    "help": print_help,
+    "untappd": commands.untappd,
 }
 
 
@@ -49,22 +50,22 @@ command_map = {
 def handle_message(event_data):
     message = event_data["event"]
     if debug:
-        print('event hit: %s' % event_data)
-    if message.get('subtype') is not None:
+        print("event hit: %s" % event_data)
+    if message.get("subtype") is not None:
         # nfi what this means, but it's in the example. probably threads
         return
-    msg_text = message.get('text')
+    msg_text = message.get("text")
     channel = message["channel"]
     if not msg_text:
         # wtf?
         return
 
-    if msg_text.startswith('.'):
+    if msg_text.startswith("."):
         # we have a bot command
-        cmd, *args = msg_text.lstrip('.').split()
+        cmd, *args = msg_text.lstrip(".").split()
         cmd = command_map.get(cmd.lower())
         if debug:
-            print('command hit: %s', cmd)
+            print("command hit: %s", cmd)
         if not cmd:
             return
         response = cmd(args)
@@ -72,12 +73,10 @@ def handle_message(event_data):
 
     if re.search(r"\b69\b", msg_text):
         if debug:
-            print('69 hit: %s', msg_text)
+            print("69 hit: %s", msg_text)
         slack_client.reactions_add(
-            channel=channel,
-            name="nice",
-            timestamp=message["ts"]
-            )
+            channel=channel, name="nice", timestamp=message["ts"]
+        )
 
 
 @slack_events_adapter.on("member_joined_channel")
@@ -87,13 +86,12 @@ def handle_join(event_data):
 
     if channel == "C0FKR5YDT":  # this is the ID for #general
         # if channel == "C8TTK8Y58":  # this is the ID for #bot_stuff
-        response = """HBC welcome <@%s>
-https://i.imgur.com/mHznIY8.png""" % message["user"]
-        slack_client.chat_postMessage(
-            channel=channel,
-            text=response,
-            unfurl_links=True
-            )
+        response = (
+            """HBC welcome <@%s>
+https://i.imgur.com/mHznIY8.png"""
+            % message["user"]
+        )
+        slack_client.chat_postMessage(channel=channel, text=response, unfurl_links=True)
 
 
 # Error events

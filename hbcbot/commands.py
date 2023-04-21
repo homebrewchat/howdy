@@ -124,6 +124,36 @@ def untappd(args):
             bid = data["response"]["beers"]["items"][0]["beer"]["bid"]
         except:
             return "Type in beer name accurately"
-        return f"https://untappd.com/beer/{bid}"
+    else:
+        return usage
+
+    api_url = f"https://api.untappd.com/v4/beer/info/{bid}?limit=1&client_id={untappd_client_id}&client_secret={untappd_client_secret}"
+
+    try:
+        response = requests.get(api_url)
+    except requests.exceptions.RequestException as e:
+        return f"Unable to issue API query for Untappd, {e}"
+    
+    if response.status_code == 200:
+        data = response.json()
+        try:
+            bbrewery = data["response"]["beer"]["brewery"]["brewery_name"]
+            bname = data["response"]["beer"]["beer_name"]
+            brating = round(data["response"]["beer"]["rating_score"],2)
+            bcount = data["response"]["beer"]["rating_count"]
+            babv = round(data["response"]["beer"]["beer_abv"],1)
+            bibu = data["response"]["beer"]["beer_ibu"]
+            bstyle = data["response"]["beer"]["beer_style"]
+            bdesc = data["response"]["beer"]["beer_description"]
+            blabel = data["response"]["beer"]["beer_label"]
+            bheading_text = f"*{bbrewery} {bname}*"
+            brating_text = f"*Average Rating*\n{brating} from {bcount} opinions" 
+            bdesc_text = f"*Style:* {bstyle}\n*IBU:* {bibu} *ABV:* {babv}\n{bdesc}"
+            beer_json = [{ "type": "section", "text": { "type": "mrkdwn", "text": bheading_text } },
+                         { "type": "section", "block_id": "section567", "text": { "type": "mrkdwn", "text": bdesc_text },
+                           "accessory": { "type": "image", "image_url":  blabel, "alt_text": "Beer label image" } },
+                         { "type": "section", "block_id": "section789", "fields": [ { "type": "mrkdwn", "text": brating_text } ]
+                         }]
+        return beer_json
     else:
         return usage

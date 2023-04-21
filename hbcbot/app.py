@@ -1,5 +1,6 @@
 import os
 import re
+import json
 
 from flask import Flask
 from slack_sdk import WebClient
@@ -69,7 +70,10 @@ def handle_message(event_data):
         if not cmd:
             return
         response = cmd(args)
-        slack_client.chat_postMessage(channel=channel, text=response)
+        if isinstance(response, str):
+            slack_client.chat_postMessage(channel=channel, text=response)
+        else:
+            slack_client.chat_postMessage(channel=channel, blocks=json.dumps(response))
 
     if re.search(r"\b69\b", msg_text):
         if debug:

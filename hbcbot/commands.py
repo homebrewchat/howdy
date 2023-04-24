@@ -133,7 +133,7 @@ def untappd(args):
         response = requests.get(api_url)
     except requests.exceptions.RequestException as e:
         return f"Unable to issue API query for Untappd, {e}"
-    
+   
     if response.status_code == 200:
         data = response.json()
         try:
@@ -147,13 +147,16 @@ def untappd(args):
             bdesc = data["response"]["beer"]["beer_description"]
             blabel = data["response"]["beer"]["beer_label"]
             bheading_text = f"*{bbrewery} {bname}*"
-            brating_text = f"*Average Rating*\n{brating} from {bcount} opinions" 
+            brating_text = f"*Average Rating*\n{brating} from {bcount} opinions"
             bdesc_text = f"*Style:* {bstyle}\n*IBU:* {bibu} *ABV:* {babv}\n{bdesc}"
             beer_json = [{ "type": "section", "text": { "type": "mrkdwn", "text": bheading_text } },
                          { "type": "section", "block_id": "section567", "text": { "type": "mrkdwn", "text": bdesc_text },
                            "accessory": { "type": "image", "image_url":  blabel, "alt_text": "Beer label image" } },
                          { "type": "section", "block_id": "section789", "fields": [ { "type": "mrkdwn", "text": brating_text } ]
                          }]
-        return beer_json
+        except:
+            return "Type in beer name more accurately"
     else:
         return usage
+    return beer_json
+

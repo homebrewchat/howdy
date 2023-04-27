@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+import urllib
 
 from hbcbot import commands
 

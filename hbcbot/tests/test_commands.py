@@ -88,7 +88,7 @@ class TestUntappd(unittest.TestCase):
     )
     def test_no_args(self):
         expected = "Usage: .untappd <beer name>"
-        result = untappd(None)
+        result = commands.untappd(None)
         self.assertEqual(result, expected)
 
     @patch("hbcbot.commands.requests.get")
@@ -99,5 +99,5 @@ class TestUntappd(unittest.TestCase):
     def test_encode_args(self, mock_get):
         args = "test beer"
         expected_url = f"https://api.untappd.com/v4/search/beer?q={urllib.parse.quote_plus(args)}&client_id=client_id&client_secret=client_secret"
-        untappd(args)
+        commands.untappd(args)
         mock_get.assert_called_once_with(expected_url)

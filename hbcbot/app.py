@@ -1,8 +1,10 @@
 import os
 import re
 import json
+import threading
+import requests
 
-from flask import Flask
+from flask import Flask, json, request
 from slack_sdk import WebClient
 from slackeventsapi import SlackEventAdapter
 
@@ -102,3 +104,26 @@ https://i.imgur.com/mHznIY8.png"""
 @slack_events_adapter.on("error")
 def error_handler(err):
     print("ERROR: " + str(err))
+
+
+# Slash commands
+def untappd_worker(response_url,query):
+    response = commands.untappd(query)
+    if isinstance(response, str):
+        message = { "text": response, "response_type": "in_channel" }
+    else:
+        message = { "blocks": response, "response_type": "in_channel" }
+    res = requests.post(response_url, json=message)
+
+@app.route('/untappd', methods=['POST'])
+def untappd_response():
+    slack_request = request.form
+    response_url = slack_request["response_url"]
+    query = slack_request["text"]
+    x = threading.Thread(
+            target=untappd_worker,
+            args=(response_url,query,)
+        )
+    x.start()
+    return "Okay hoss, let me check on that with untappd for you"
+

@@ -14,4 +14,5 @@ CMD uwsgi \
     --http 0.0.0.0:8800 \
     --wsgi-file /app/hbcbot/app.py \
     --callable app \
-    --processes 4
+    --processes 4 \
+    --enable-threads

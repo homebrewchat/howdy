@@ -56,6 +56,7 @@ def handle_message(event_data):
         return
     msg_text = message.get("text")
     channel = message["channel"]
+    thread_ts = message.get("thread_ts")
     if not msg_text:
         # wtf?
         return
@@ -69,7 +70,9 @@ def handle_message(event_data):
         if not cmd:
             return
         response = cmd(args)
-        slack_client.chat_postMessage(channel=channel, text=response)
+        slack_client.chat_postMessage(
+            channel=channel, text=response, thread_ts=thread_ts or ""
+        )
 
     if re.search(r"\b69\b", msg_text):
         if debug:

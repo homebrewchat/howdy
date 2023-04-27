@@ -1,5 +1,6 @@
 import os
 import requests
+import urllib
 
 
 def _abv(og, fg):
@@ -111,6 +112,7 @@ def untappd(args):
     except KeyError:
         return "Tyler, please add the Untappd API keys"
 
+    args = urllib.parse.quote_plus(args)
     api_url = f"https://api.untappd.com/v4/search/beer?q={args}&client_id={untappd_client_id}&client_secret={untappd_client_secret}"
 
     try:

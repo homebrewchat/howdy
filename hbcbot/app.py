@@ -126,7 +126,7 @@ def validate_slack_caller(request,signing_secret) -> bool:
 def untappd_worker(response_url,query):
     response = commands.untappd(query)
     if isinstance(response, str):
-        message = { "text": response, "response_type": "in_channel" }
+        message = { "text": response }
     else:
         message = { "blocks": response, "response_type": "in_channel" }
     res = requests.post(response_url, json=message)

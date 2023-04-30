@@ -143,6 +143,8 @@ def untappd(args):
             bcount = data["response"]["beer"]["rating_count"]
             babv = round(data["response"]["beer"]["beer_abv"],1)
             bibu = data["response"]["beer"]["beer_ibu"]
+            if bibu == 0:
+                bibu = 'Not disclosed  '
             bstyle = data["response"]["beer"]["beer_style"]
             bdesc = data["response"]["beer"]["beer_description"]
             blabel = data["response"]["beer"]["beer_label"]

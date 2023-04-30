@@ -3,6 +3,8 @@ import re
 import json
 import threading
 import requests
+import hmac
+import hashlib
 
 from flask import Flask, json, request
 from slack_sdk import WebClient
@@ -106,6 +108,20 @@ def error_handler(err):
     print("ERROR: " + str(err))
 
 
+def validate_slack_caller(request,signing_secret) -> bool:
+    request_data = request.get_data()
+    timestamp = request.headers.get('X-Slack-Request-Timestamp')
+    signature = request.headers.get('X-Slack-Signature')
+    signature_basestring = 'v0:' + timestamp + ':' + request_data.decode('utf-8')
+    req_signature = 'v0=' + hmac.new(signing_secret.encode('utf-8'), signature_basestring.encode('utf-8'), hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(req_signature, signature):
+        return False
+        if debug:
+            print("Bad signing sig on untappd request")
+    else:
+        return True
+
+
 # Slash commands
 def untappd_worker(response_url,query):
     response = commands.untappd(query)
@@ -117,6 +133,8 @@ def untappd_worker(response_url,query):
 
 @app.route('/untappd', methods=['POST'])
 def untappd_response():
+    if not validate_slack_caller(request,slack_signing_secret):
+        return '', 403
     slack_request = request.form
     response_url = slack_request["response_url"]
     query = slack_request["text"]

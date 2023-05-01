@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+import urllib
 
 from hbcbot import commands
 
@@ -79,6 +80,18 @@ class TestUntappd(unittest.TestCase):
             commands.untappd(args)
             mock_get.assert_called_with(expected_api_url)
 
+    @patch.dict(
+        "os.environ",
+        {
+            "UNTAPPD_CLIENT_ID": "mock_client_id",
+            "UNTAPPD_CLIENT_SECRET": "mock_client_secret",
+        },
+    )
+    def test_no_args(self):
+        expected = "Usage: .untappd <beer name>"
+        result = commands.untappd(None)
+        self.assertEqual(result, expected)
+
     @patch("hbcbot.commands.requests.get")
     @patch(
         "hbcbot.commands.os.environ",
@@ -87,5 +100,5 @@ class TestUntappd(unittest.TestCase):
     def test_encode_args(self, mock_get):
         args = "test beer"
         expected_url = f"https://api.untappd.com/v4/search/beer?q={urllib.parse.quote_plus(args)}&client_id=client_id&client_secret=client_secret"
-        untappd(args)
+        commands.untappd(args)
         mock_get.assert_called_once_with(expected_url)

@@ -1,6 +1,5 @@
 import os
 import requests
-import urllib
 
 
 def _abv(og, fg):
@@ -112,7 +111,6 @@ def untappd(args):
     except KeyError:
         return "Tyler, please add the Untappd API keys"
 
-    args = urllib.parse.quote_plus(args)
     api_url = f"https://api.untappd.com/v4/search/beer?q={args}&client_id={untappd_client_id}&client_secret={untappd_client_secret}"
 
     try:
@@ -124,12 +122,8 @@ def untappd(args):
         data = response.json()
         try:
             bid = data["response"]["beers"]["items"][0]["beer"]["bid"]
-        except IndexError:
-            try:
-                if data["response"]["homebrew"]:
-                    bid = data["response"]["homebrew"]["items"][0]["beer"]["bid"]
-            except (KeyError, IndexError):
-                return "Type in beer name accurately"
+        except:
+            return "Type in beer name accurately"
         return f"https://untappd.com/beer/{bid}"
     else:
         return usage

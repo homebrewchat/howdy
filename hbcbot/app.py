@@ -42,6 +42,8 @@ command_map = {
     "hydrometer": commands.hydro_adj,
     "help": print_help,
     "untappd": commands.untappd,
+    "fx": commands.conv_fx,
+    "q": commands.stonks
 }
 
 

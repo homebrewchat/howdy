@@ -127,3 +127,63 @@ def untappd(args):
         return f"https://untappd.com/beer/{bid}"
     else:
         return usage
+
+def conv_fx(args):
+    usage = "Usage: .fx <AMOUNT> <FROM> <TO>"
+    if not args or len(args) != 3:
+        return usage
+
+    try:
+        amount = float(args[0])
+        from_currency = str(args[1])
+        to_currency = str(args[2])
+    except ValueError:
+        return usage
+
+    key = os.environ.get("AV_KEY")
+    if not key:
+        return "API key is not set."
+    
+    try:
+        response = requests.get(f'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_currency}&to_currency={to_currency}&apikey={key}', timeout=10)
+        data = response.json()
+
+        if data:
+            rate_data = data['Realtime Currency Exchange Rate']
+            er = float(rate_data['5. Exchange Rate'])
+            tot = amount * er
+            output = "%(am).2f %(from_cur)s is %(result).2f %(to_cur)s at %(er)f" % { "from_cur": rate_data['2. From_Currency Name'], "am": amount, "result": tot, "to_cur": rate_data['4. To_Currency Name'], "er": er }
+            return output
+        
+    except requests.exceptions.RequestException as e:
+        return f"Unable to issue API query for Alpha Vantage, maybe we're out of free requests, {e}"
+    except Exception:
+        return usage
+
+def stonks(args):
+    usage = "Usage: .q <STONK>"
+    if not args:
+        return usage
+    if len(args) >= 7:
+        return usage
+    stonk = str(args[0])
+    key = os.getenv("AV_KEY", None)
+    if not key:
+        return "API key is not set."
+    
+    try:
+        response = requests.get(f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stonk}&apikey={key}', timeout=10)
+        data = response.json()
+
+        if data:
+            symbol = data['Global Quote']['01. symbol']
+            price = data['Global Quote']['05. price']
+            date = data['Global Quote']['07. latest trading day']
+            change = data['Global Quote']['10. change percent']
+            output = f'{symbol} {price} {date} {change}'
+            return output
+        
+    except requests.exceptions.RequestException as e:
+        return f"Unable to issue API query for Alpha Vantage, maybe we're out of free requests, {e}"
+    except Exception:
+        return usage

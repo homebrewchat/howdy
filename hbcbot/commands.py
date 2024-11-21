@@ -38,7 +38,7 @@ def calc_abv(args):
         fg = float(args[1])
         return "ABV is %.1f" % _abv(og, fg)
 
-    except ValueError:
+    except Exception:
         # not passed numbers
         return usage
 
@@ -114,7 +114,7 @@ def untappd(args):
     api_url = f"https://api.untappd.com/v4/search/beer?q={args}&client_id={untappd_client_id}&client_secret={untappd_client_secret}"
 
     try:
-        response = requests.get(api_url, timeout=10)
+        response = requests.get(api_url)
     except requests.exceptions.RequestException as e:
         return f"Unable to issue API query for Untappd, {e}"
 

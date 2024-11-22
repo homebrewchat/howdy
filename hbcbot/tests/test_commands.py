@@ -88,20 +88,30 @@ class TestUntappd(unittest.TestCase):
     )
     def test_no_args(self):
         expected = "Usage: .untappd <beer name>"
-        result = untappd(None)
+        result = commands.untappd(None)
         self.assertEqual(result, expected)
 
 class TestFX(unittest.TestCase):
-    @patch('hbcbot.commands.requests.get')
-    def test_no_args(self):
+    @patch.dict(
+        "os.environ",
+        {
+            "AV_KEY": "mock_key",
+        },
+    )
+    def test_fx_no_args(self):
         expected = "Usage: .fx <AMOUNT> <FROM> <TO>"
-        result = conv_fx(None)
+        result = commands.conv_fx(None)
         self.assertEqual(result, expected)
 
-    @patch('hbcbot.commands.requests.get')
-    def test_invalid_args(self):
+    @patch.dict(
+        "os.environ",
+        {
+            "AV_KEY": "mock_key",
+        },
+    )
+    def test_fx_invalid_args(self):
         expected = "Usage: .fx <AMOUNT> <FROM> <TO>"
-        result = conv_fx(['100'])
+        result = commands.conv_fx(['100'])
         self.assertEqual(result, expected)
 
     @patch.dict(
@@ -110,24 +120,23 @@ class TestFX(unittest.TestCase):
             "AV_KEY": "mock_key"
         },
     )
-    def test_mocked_api_call_with_valid_input(self):
+    def test_mocked_fx_api_call_with_valid_input(self):
         args = ['100', 'USD', 'EUR']
-        expected_api_url = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=EUR&apikey=mock_key"
+        expected_api_url = 'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=EUR&apikey=mock_key'
         with patch('hbcbot.commands.requests.get') as mock_get:
             commands.conv_fx(args)
-            mock_get.assert_called_with(expected_api_url)
+            mock_get.assert_called_with(expected_api_url, timeout=10)
  
 class TestStonks(unittest.TestCase):
-    @patch('hbcbot.commands.requests.get')
-    def test_no_args(self):
+    @patch.dict(
+        "os.environ",
+        {
+            "AV_KEY": "mock_key"
+        },
+    )
+    def test_stonks_no_args(self):
         expected = "Usage: .q <STONK>"
-        result = stonks(None)
-        self.assertEqual(result, expected)
-
-    @patch('hbcbot.commands.requests.get')
-    def test_invalid_args(self):
-        expected = "Usage: .q <STONK>"
-        result = stonks('AAPLAAPL')
+        result = commands.stonks(None)
         self.assertEqual(result, expected)
 
     @patch.dict(
@@ -136,11 +145,22 @@ class TestStonks(unittest.TestCase):
             "AV_KEY": "mock_key"
         },
     )
-    def test_mocked_api_call_with_valid_input(self):
+    def test_stonks_invalid_args(self):
+        expected = "Usage: .q <STONK>"
+        result = commands.stonks('AAPLAAPL')
+        self.assertEqual(result, expected)
+
+    @patch.dict(
+        "os.environ",
+        {
+            "AV_KEY": "mock_key"
+        },
+    )
+    def test_mocked_stonks_api_call_with_valid_input(self):
         args = ['AAPL']
-        expected_api_url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=mock_key"
+        expected_api_url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=mock_key'
         with patch('hbcbot.commands.requests.get') as mock_get:
             commands.stonks(args)
-            mock_get.assert_called_with(expected_api_url)
+            mock_get.assert_called_with(expected_api_url, timeout=10)
 
  
